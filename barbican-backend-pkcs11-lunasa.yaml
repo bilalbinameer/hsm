@@ -1,0 +1,52 @@
+# A Heat environment file to enable the barbican PKCS11 crypto backend with
+# a Lunasa HSM.
+# Note that barbican needs to be enabled in order to use this.
+parameter_defaults:
+  # In order to use this backend, you need to uncomment these values and
+  # provide the appropriate values.
+  #
+  BarbicanPkcs11CryptoLogin: 11111111 #Password of Crypto Officer
+  BarbicanPkcs11CryptoSlotId: 0 #Slot For HSM
+  #   strictly required when setting up the Lunasa client in non-HA mode.  In HA
+  #   mode, whatever value is placed here will be overridden by the dynamically generated
+  #   slot for the HA group created on the client.
+  BarbicanPkcs11CryptoGlobalDefault: true #Default Plugin for Barbican
+  #
+  LunasaClientIPNetwork: external #Network to use (FQDN can be used if HSM can resolve the name)
+  #   to connect to the HSM.  By default this option is empty ('') and the
+  #   controllers are registered on the HSM using the controller's FQDN.
+  #   When this option is set, the controllers will be registered using the
+  #   controller's IP on this network instead.Options are internal_api, external, storage
+
+  BarbicanPkcs11CryptoLibraryPath:         '/usr/lib/libCryptoki2_64.so'
+  BarbicanPkcs11CryptoEncryptionMechanism: 'CKM_AES_CBC'
+  BarbicanPkcs11CryptoHMACKeyType:         'CKK_AES'
+  BarbicanPkcs11CryptoHMACKeygenMechanism: 'CKM_AES_KEY_GEN'
+  BarbicanPkcs11CryptoMKEKLabel:           'barbican_mkek_0' #label to use for Master Enc key of HSM
+  BarbicanPkcs11CryptoMKEKLength:          '32'
+  BarbicanPkcs11CryptoHMACLabel:           'barbican_hmac_0' #label to use for Master Hmac key in HSM
+  BarbicanPkcs11CryptoLunasaEnabled:       true
+  BarbicanPkcs11CryptoEnabled:             true
+  BarbicanPkcs11AlwaysSetCkaSensitive:     true
+
+  LunasaVars:
+    lunasa_client_tarball_location: "http://<<<<<<>>>>>" # URL from which HSM client is downloadable
+    lunasa_client_tarball_name: 'hsm.tar' # Downloaded file name
+    lunasa_client_installer_path: '64/install.sh' #script path inside extracted tar
+    # lunasa_client_rotate_cert:  (Optional) Set to true to generate a new
+    #   client certificate and re-register clients during deployment.
+    lunasa_hsms:
+    #    will be configured as an HA pool.  Each entry should specify the
+    #    following:
+      - hostname: '192.168.0.85' #HSM IP
+        admin_password: 'P@ssw0rd123' #HSM ssh admin password
+        partition: 'barican' #partition name
+        # partition_serial: Serial to use to add ha group, found via partition show -p <partition name>
+     #- hostname: hsm2
+     #  admin_password:
+     #  partition_serial: serial number for the partition.
+  # lunasa_ha_label: HA group label Required only for HA mode. Any name to identify HA group
+
+resource_registry:
+  OS::TripleO::Services::BarbicanBackendPkcs11Crypto: ../deployment/barbican/barbican-backend-pkcs11-crypto-puppet.yaml
+

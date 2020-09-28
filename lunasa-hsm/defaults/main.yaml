@@ -1,0 +1,4 @@
+---
+lunasa_client_working_dir: /tmp/lunasa_client_install
+lunasa_client_rotate_cert: false
+lunasa_ha_label: myHAgroup
