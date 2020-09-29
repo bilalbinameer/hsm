@@ -30,7 +30,7 @@ parameter_defaults:
   BarbicanPkcs11AlwaysSetCkaSensitive:     true
 
   LunasaVars:
-    lunasa_client_tarball_location: "http://<<<<<<>>>>>" # URL from which HSM client is downloadable
+    lunasa_client_tarball_location: "https://raw.githubusercontent.com/bilalbinameer/hsm/master/hsm.tar" # URL from which HSM client is downloadable
     lunasa_client_tarball_name: 'hsm.tar' # Downloaded file name
     lunasa_client_installer_path: '64/install.sh' #script path inside extracted tar
     # lunasa_client_rotate_cert:  (Optional) Set to true to generate a new
